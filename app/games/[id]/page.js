@@ -1,16 +1,28 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
 import Styles from "./Game.module.css";
-import { getGameById } from "@/app/data/data-utils";
 import NotFound from "@/app/components/NotFound/NotFound";
+import { endpoints } from "@/app/api/config";
+import { getNormalizedGameDataById, isResponseOk } from "@/app/api/api-utils";
+import { Preloader } from "@/app/components/Preloader/Preloader";
 
 export default function GamePage(props) {
+    const [game, setGame] = useState(null);
+    const [preloaderVisible, setPreloaderVisible] = useState(true);
     const { params } = props;
     const { id } = params;
     const history = useRouter();
-    const game = getGameById(id);
+    useEffect(() => {
+        async function fetchData() {
+            const game = await getNormalizedGameDataById(endpoints.games, id);
+            isResponseOk(game) ? setGame(game) : setGame(null);
+            setPreloaderVisible(false);
+        }
+
+        fetchData();
+    }, []);
     const handleAddVoice = () => {
         history.replace("/login");
     };
@@ -54,8 +66,10 @@ export default function GamePage(props) {
                 </div>
             </section>
         </main>
+    ) : preloaderVisible ? (
+        <Preloader/>
     ) : (
-        <NotFound />
+        <NotFound/>
     );
 }
 

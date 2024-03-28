@@ -1,13 +1,14 @@
 import React from "react";
 
-import { getGamesByCategory } from "@/app/data/data-utils";
 import CardsList from "@/app/components/CardList/CardsList";
+import { getNormalizedGamesDataByCategory } from "@/app/api/api-utils";
+import { endpoints } from "@/app/api/config";
 
-export default function Popular() {
-    const popularGames = getGamesByCategory("popular");
+export default async function Popular() {
+    const popularGames = await getNormalizedGamesDataByCategory(endpoints.games, "popular");
     return (
         <main className="main">
-            <CardsList id="popular" title="Популярное" data={popularGames} />
+            <CardsList id="popular" title="Популярное" data={popularGames}/>
         </main>
     );
 }

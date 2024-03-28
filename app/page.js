@@ -2,12 +2,13 @@ import React from "react";
 import Banner from "@/app/components/Banner/Banner";
 import Promo from "@/app/components/Promo/Promo";
 
-import { getGamesByCategory } from "@/app/data/data-utils";
 import CardsList from "@/app/components/CardList/CardsList";
+import { getNormalizedGamesDataByCategory } from "@/app/api/api-utils";
+import { endpoints } from "@/app/api/config";
 
-export default function Home() {
-    const popularGames = getGamesByCategory("popular");
-    const newGames = getGamesByCategory("new");
+export default async function Home() {
+    const popularGames = await getNormalizedGamesDataByCategory(endpoints.games, "popular");
+    const newGames = await getNormalizedGamesDataByCategory(endpoints.games, "new");
     return (
         <main className="main">
             <Banner />
