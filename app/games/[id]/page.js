@@ -5,12 +5,20 @@ import PropTypes from "prop-types";
 import Styles from "./Game.module.css";
 import NotFound from "@/app/components/NotFound/NotFound";
 import { endpoints } from "@/app/api/config";
-import { getNormalizedGameDataById, isResponseOk } from "@/app/api/api-utils";
+import {
+    getJWT,
+    getMe,
+    getNormalizedGameDataById,
+    isResponseOk,
+    removeJWT
+} from "@/app/api/api-utils";
 import { Preloader } from "@/app/components/Preloader/Preloader";
 
 export default function GamePage(props) {
     const [game, setGame] = useState(null);
     const [preloaderVisible, setPreloaderVisible] = useState(true);
+    const [isAuthorized, setIsAuthorized] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
     const { params } = props;
     const { id } = params;
     const history = useRouter();
@@ -22,6 +30,21 @@ export default function GamePage(props) {
         }
 
         fetchData();
+    }, []);
+
+    useEffect(() => {
+        const jwt = getJWT();
+        if (jwt) {
+            getMe(endpoints.me, jwt).then((userData) => {
+                if (isResponseOk(userData)) {
+                    setIsAuthorized(true);
+                    setCurrentUser(userData);
+                } else {
+                    setIsAuthorized(false);
+                    removeJWT();
+                }
+            });
+        }
     }, []);
     const handleAddVoice = () => {
         history.replace("/login");
@@ -59,7 +82,7 @@ export default function GamePage(props) {
                     </p>
                     <button
                         className={`button ${Styles["about__vote-button"]}`}
-                        onClick={handleAddVoice}
+                        disabled={!isAuthorized}
                     >
                         Голосовать
                     </button>
@@ -67,9 +90,9 @@ export default function GamePage(props) {
             </section>
         </main>
     ) : preloaderVisible ? (
-        <Preloader/>
+        <Preloader />
     ) : (
-        <NotFound/>
+        <NotFound />
     );
 }
 

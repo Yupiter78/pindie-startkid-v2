@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Styles from "./AuthForm.module.css";
 import PropTypes from "prop-types";
+import { authorize, getMe, isResponseOk, setJWT } from "@/app/api/api-utils";
+import { endpoints } from "@/app/api/config";
 
 export const AuthForm = ({ close, setAuth }) => {
     const [authData, setAuthData] = useState({
@@ -14,8 +16,15 @@ export const AuthForm = ({ close, setAuth }) => {
     });
 
     useEffect(() => {
-        console.log("authData: ", authData);
-    }, [authData]);
+        let timer;
+        if (userData) {
+            timer = setTimeout(() => {
+                close();
+            }, 1000);
+        }
+
+        return () => clearTimeout(timer);
+    }, [userData]);
 
     const handleInput = ({ target }) => {
         setAuthData((prevAuthData) => ({
@@ -23,8 +32,28 @@ export const AuthForm = ({ close, setAuth }) => {
             [target.name]: target.value
         }));
     };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const userData = await authorize(endpoints.auth, authData);
+        if (isResponseOk(userData)) {
+            await getMe(endpoints.me, userData.jwt);
+            setJWT(userData.jwt);
+            setUserData(userData);
+            setAuth(true);
+            setMessage({
+                status: "success",
+                text: "You are logged in!"
+            });
+        } else {
+            setMessage({
+                status: "error",
+                text: "Incorrect password or email"
+            });
+        }
+    };
+    console.log("userData: ", userData);
     return (
-        <form className={Styles.form}>
+        <form className={Styles.form} onSubmit={handleSubmit}>
             <h2 className={Styles.form__title}>Авторизация</h2>
             <div className={Styles.form__fields}>
                 <label className={Styles.form__field}>
@@ -48,6 +77,10 @@ export const AuthForm = ({ close, setAuth }) => {
                     />
                 </label>
             </div>
+            {message.status && (
+                <p className={Styles.form__message}>{message.text}</p>
+            )}
+
             <div className={Styles.form__actions}>
                 <button className={Styles.form__reset} type="reset">
                     Очистить
