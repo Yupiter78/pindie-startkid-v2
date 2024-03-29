@@ -9,6 +9,7 @@ import Link from "next/link";
 
 const Header = () => {
     const [popupIsOpened, setPopupIsOpened] = useState(false);
+    const [isAuthorized, setIsAuthorized] = useState(false);
     const pathname = usePathname();
     const openPopup = () => {
         setPopupIsOpened(true);
@@ -111,13 +112,13 @@ const Header = () => {
                 </ul>
                 <div className={styles.auth}>
                     <button className={styles.auth__button} onClick={openPopup}>
-                        Войти
+                        {isAuthorized ? "Выйти" : "Войти"}
                     </button>
                 </div>
             </nav>
             <Overlay isOpened={popupIsOpened} close={closePopup} />
             <Popup isOpened={popupIsOpened} close={closePopup}>
-                <AuthForm />
+                <AuthForm close={closePopup} setAuth={setIsAuthorized}/>
             </Popup>
         </header>
     );
