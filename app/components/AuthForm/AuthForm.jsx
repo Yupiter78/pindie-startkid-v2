@@ -37,8 +37,8 @@ export const AuthForm = ({ close, setAuth }) => {
         const userData = await authorize(endpoints.auth, authData);
         if (isResponseOk(userData)) {
             await getMe(endpoints.me, userData.jwt);
-            setJWT(userData.jwt);
             setUserData(userData);
+            setJWT(userData.jwt);
             setAuth(true);
             setMessage({
                 status: "success",
@@ -51,7 +51,7 @@ export const AuthForm = ({ close, setAuth }) => {
             });
         }
     };
-    console.log("userData: ", userData);
+
     return (
         <form className={Styles.form} onSubmit={handleSubmit}>
             <h2 className={Styles.form__title}>Авторизация</h2>

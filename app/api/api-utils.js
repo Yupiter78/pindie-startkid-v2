@@ -2,9 +2,7 @@ export const getData = async (url) => {
     try {
         const response = await fetch(url);
         if (response.status !== 200) throw new Error("bad request");
-        const data = await response.json();
-        console.log("data: ", data);
-        return data;
+        return await response.json();
     } catch (error) {
         console.error(error);
         return error;
@@ -47,9 +45,7 @@ export const authorize = async (url, data) => {
             body: JSON.stringify(data)
         });
         if (response.status !== 200) throw new Error("Authorisation Error");
-        const result = await response.json();
-        console.log("result: ", result);
-        return result;
+        return await response.json();
     } catch (error) {
         console.error(error);
         return error;
@@ -75,9 +71,7 @@ export const getMe = async (url, jwt) => {
             headers: { Authorization: `Bearer ${jwt}` }
         });
         if (response.status !== 200) throw new Error("Error get data");
-        const result = await response.json();
-        console.log("result: ", result);
-        return result;
+        return await response.json();
     } catch (error) {
         console.error("error: ", error);
         return error;
@@ -102,7 +96,7 @@ export const vote = async (url, jwt, usersArray) => {
             throw new Error("Ошибка голосования");
         }
         const result = await response.json();
-        console.log("result: ", result);
+        console.log("result_VOTE: ", result);
         return result;
     } catch (error) {
         return error;
