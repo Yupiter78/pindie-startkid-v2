@@ -1,30 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Styles from "./AuthForm.module.css";
+import { AuthContext } from "@/app/context/app-context";
 import PropTypes from "prop-types";
-import { authorize, getMe, isResponseOk, setJWT } from "@/app/api/api-utils";
+import { authorize, isResponseOk } from "@/app/api/api-utils";
 import { endpoints } from "@/app/api/config";
 
-export const AuthForm = ({ close, setAuth }) => {
+export const AuthForm = ({ close }) => {
+    const { login, user } = useContext(AuthContext);
     const [authData, setAuthData] = useState({
         identifier: "",
         password: ""
     });
-    const [userData, setUserData] = useState(null);
+
     const [message, setMessage] = useState({
-        status: null,
-        text: null
+        status: "",
+        text: ""
     });
 
     useEffect(() => {
         let timer;
-        if (userData) {
+        if (user) {
             timer = setTimeout(() => {
                 close();
             }, 1000);
         }
 
         return () => clearTimeout(timer);
-    }, [userData]);
+    }, [user]);
 
     const handleInput = ({ target }) => {
         setAuthData((prevAuthData) => ({
@@ -36,10 +38,7 @@ export const AuthForm = ({ close, setAuth }) => {
         event.preventDefault();
         const userData = await authorize(endpoints.auth, authData);
         if (isResponseOk(userData)) {
-            await getMe(endpoints.me, userData.jwt);
-            setUserData(userData);
-            setJWT(userData.jwt);
-            setAuth(true);
+            login(userData.user, userData.jwt);
             setMessage({
                 status: "success",
                 text: "You are logged in!"
