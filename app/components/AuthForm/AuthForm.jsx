@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
+import { useStore } from "@/app/store/app-store";
 import Styles from "./AuthForm.module.css";
-import { AuthContext } from "@/app/context/app-context";
 import PropTypes from "prop-types";
 import { authorize, isResponseOk } from "@/app/api/api-utils";
 import { endpoints } from "@/app/api/config";
 
 export const AuthForm = ({ close }) => {
-    const { login, user } = useContext(AuthContext);
+    const { login, user } = useStore();
     const [authData, setAuthData] = useState({
         identifier: "",
         password: ""

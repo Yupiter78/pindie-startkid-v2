@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState, useContext } from "react";
-import { AuthContext } from "@/app/context/app-context";
+import React, { useEffect, useState } from "react";
+import { useStore } from "@/app/store/app-store";
 
 import PropTypes from "prop-types";
 import Styles from "./Game.module.css";
@@ -15,7 +15,7 @@ import {
 import { Preloader } from "@/app/components/Preloader/Preloader";
 
 export default function GamePage(props) {
-    const { isAuth, user, token } = useContext(AuthContext);
+    const { isAuth, user, token } = useStore();
     const [game, setGame] = useState(null);
     const [preloaderVisible, setPreloaderVisible] = useState(true);
     const [isVoted, setIsVoted] = useState(false);

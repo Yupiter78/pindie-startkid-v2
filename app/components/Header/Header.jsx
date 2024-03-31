@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useContext } from "react";
-import { AuthContext } from "@/app/context/app-context";
+import React, { useState } from "react";
+import { useStore } from "@/app/store/app-store";
 
 import { usePathname } from "next/navigation";
 import styles from "./Header.module.css";
@@ -10,7 +10,7 @@ import { AuthForm } from "../AuthForm/AuthForm";
 import Link from "next/link";
 
 const Header = () => {
-    const { isAuth, logout } = useContext(AuthContext);
+    const { isAuth, logout } = useStore();
     const [popupIsOpened, setPopupIsOpened] = useState(false);
 
     const pathname = usePathname();
