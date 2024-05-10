@@ -14,10 +14,12 @@ export const isResponseOk = (response) => {
 };
 
 const normalizeDataObject = (obj) => {
+    let str = JSON.stringify(obj);
+    str = str.replaceAll("_id", "id");
+    const newObj = JSON.parse(str);
     return {
-        ...obj,
-        category: obj.categories,
-        users: obj.users_permissions_users
+        ...newObj,
+        category: newObj.categories
     };
 };
 

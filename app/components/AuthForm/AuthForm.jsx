@@ -8,7 +8,7 @@ import { endpoints } from "@/app/api/config";
 export const AuthForm = ({ close }) => {
     const { login, user } = useStore();
     const [authData, setAuthData] = useState({
-        identifier: "",
+        email: "",
         password: ""
     });
 
@@ -38,7 +38,7 @@ export const AuthForm = ({ close }) => {
         event.preventDefault();
         const userData = await authorize(endpoints.auth, authData);
         if (isResponseOk(userData)) {
-            login(userData.user, userData.jwt);
+            login({ ...userData, id: userData._id }, userData.jwt);
             setMessage({
                 status: "success",
                 text: "You are logged in!"
@@ -60,7 +60,7 @@ export const AuthForm = ({ close }) => {
                     <input
                         onInput={handleInput}
                         className={Styles["form__field-input"]}
-                        name="identifier"
+                        name="email"
                         type="email"
                         placeholder="hello@world.com"
                     />
