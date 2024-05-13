@@ -25,8 +25,9 @@ export const useStore = create((set) => ({
     checkAuth: async () => {
         const jwt = getJWT();
         if (jwt) {
-            const user = await getMe(endpoints.me, jwt);
+            let user = await getMe(endpoints.me, jwt);
             if (user) {
+                user = { ...user, id: user._id };
                 set({
                     isAuth: true,
                     user,

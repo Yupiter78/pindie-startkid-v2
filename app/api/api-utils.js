@@ -81,7 +81,7 @@ export const getMe = async (url, jwt) => {
 };
 
 export const checkIfUserVoted = (game, userId) => {
-    return game.users.find((user) => user.id === userId);
+    return game.users.some((user) => user.id === userId);
 };
 
 export const vote = async (url, jwt, usersArray) => {
@@ -92,13 +92,12 @@ export const vote = async (url, jwt, usersArray) => {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
             },
-            body: JSON.stringify({ users_permissions_users: usersArray })
+            body: JSON.stringify({ users: usersArray })
         });
         if (response.status !== 200) {
             throw new Error("Ошибка голосования");
         }
         const result = await response.json();
-        console.log("result_VOTE: ", result);
         return result;
     } catch (error) {
         return error;

@@ -33,7 +33,7 @@ export default function GamePage(props) {
     }, []);
 
     useEffect(() => {
-        user && game
+        user && !(user instanceof Error) && game
             ? setIsVoted(checkIfUserVoted(game, user.id))
             : setIsVoted(false);
     }, [user, game]);
