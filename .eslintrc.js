@@ -48,6 +48,7 @@ module.exports = {
             }
         ],
         "multiline-ternary": [0],
-        "no-new": 0
+        "no-new": 0,
+        "@next/next/no-img-element": "off"
     }
 };
