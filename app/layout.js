@@ -1,6 +1,7 @@
 import React from "react";
 import "./globals.css";
 import { App } from "./App";
+import PropTypes from "prop-types";
 
 export const metadata = {
     title: "Pindie",
@@ -16,3 +17,7 @@ export default function RootLayout({ children }) {
         </html>
     );
 }
+
+RootLayout.propTypes = {
+    children: PropTypes.node.isRequired
+};

@@ -3,7 +3,11 @@ module.exports = {
         browser: true,
         es2021: true
     },
-    extends: ["standard", "plugin:react/recommended"],
+    extends: [
+        "standard",
+        "plugin:react/recommended",
+        "plugin:@next/eslint-plugin-next/recommended"
+    ],
     overrides: [
         {
             env: {
@@ -19,7 +23,12 @@ module.exports = {
         ecmaVersion: "latest",
         sourceType: "module"
     },
-    plugins: ["react"],
+    plugins: ["react", "@next/eslint-plugin-next"],
+    settings: {
+        react: {
+            version: "detect"
+        }
+    },
     rules: {
         semi: [2, "always"],
         indent: [0, 4],
@@ -38,6 +47,7 @@ module.exports = {
                 allowTemplateLiterals: true
             }
         ],
-        "multiline-ternary": [0]
+        "multiline-ternary": [0],
+        "no-new": 0
     }
 };
